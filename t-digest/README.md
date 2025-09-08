@@ -19,3 +19,22 @@ Instead, the platform can use a t-digest. It adds each response time to the t-di
 *   **Cons**:
     *   It is an approximation, not an exact calculation.
     *   The accuracy depends on the size of the digest.
+
+### Mathematical Foundations
+
+A t-digest summarizes a distribution by maintaining a set of "centroids," where each centroid represents a cluster of data points. Each centroid has a `mean` (the average value of the points it represents) and a `count` (the number of points it represents). The key idea is that centroids representing data points in denser regions (e.g., near the median) are smaller (represent fewer points) and more numerous, while centroids in sparser regions (e.g., tails of the distribution) are larger (represent more points) and fewer. This adaptive compression allows t-digests to provide more accurate quantile estimates at the tails of the distribution compared to other methods.
+
+The `compression` parameter controls the number of centroids and thus the accuracy. A higher compression value leads to more centroids and better accuracy.
+
+### Implementation Considerations
+
+*   **Centroid Management**: The core of a t-digest implementation involves efficiently adding new data points, merging existing centroids, and maintaining the desired number of centroids based on the compression parameter.
+*   **Merging Strategy**: The merging strategy is crucial for maintaining accuracy, especially at the tails. Centroids are typically merged based on their proximity and the number of data points they represent, ensuring that smaller centroids are preserved in areas of high density.
+*   **Sorting**: Centroids need to be sorted by their mean value for efficient quantile estimation and merging.
+*   **Quantile Estimation**: Quantiles are estimated by linearly interpolating between the means of adjacent centroids, weighted by their counts.
+*   **Mergeability**: A significant advantage of t-digests is their mergeability. Two t-digests can be combined into a single t-digest, making them suitable for distributed and parallel processing of data streams.
+*   **No Deletions**: Standard t-digests do not support the deletion of individual data points.
+
+## Code Example
+
+A basic Go implementation of the t-digest can be found [here](code/t_digest.go).

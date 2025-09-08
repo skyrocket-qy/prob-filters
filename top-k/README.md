@@ -18,3 +18,21 @@ Instead, the service can use a Top-K algorithm. As users watch videos, the video
 *   **Cons**:
     *   It is an approximation. It may not always find the true top K items, especially if the frequencies are close.
     *   The accuracy depends on the size of the structure and the algorithm used (e.g., "heavy hitters" with Count-Min Sketch).
+
+### Mathematical Foundations
+
+Top-K algorithms are designed to find the `k` most frequent items in a data stream, often with limited memory. Many Top-K algorithms are based on probabilistic data structures like the Count-Min Sketch. The Count-Min Sketch provides an estimated frequency for each item. A common approach is to maintain a small data structure (e.g., a min-heap or a hash map) that stores the `k` items with the highest estimated frequencies seen so far.
+
+The accuracy of the Top-K list depends on the accuracy of the underlying frequency estimation mechanism (e.g., the `epsilon` and `delta` parameters of the Count-Min Sketch). While the algorithm aims to find the true top K items, it's an approximation, and there's a probability of missing some true top items or including some false positives, especially when frequencies are very close.
+
+### Implementation Considerations
+
+*   **Underlying Frequency Estimator**: A robust frequency estimation data structure (like Count-Min Sketch) is crucial for the accuracy of the Top-K list.
+*   **Top-K Data Structure**: A min-heap is commonly used to efficiently maintain the `k` largest elements. When a new item's estimated frequency is higher than the smallest element in the heap, the smallest element is removed, and the new item is inserted.
+*   **Handling Collisions/Approximations**: Since the frequency estimates are approximate, the Top-K list might not always be perfectly accurate. Strategies might be needed to periodically re-evaluate the top items or to handle cases where items have very similar frequencies.
+*   **Memory Management**: The memory usage is primarily determined by the size of the underlying frequency estimator and the `k` items stored in the heap.
+*   **Dynamic Updates**: Top-K algorithms are well-suited for streaming data, as they can be updated incrementally as new items arrive.
+
+## Code Example
+
+A basic Go implementation of the Top-K algorithm can be found [here](code/top_k.go).

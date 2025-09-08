@@ -20,3 +20,25 @@ With HyperLogLog, the website can process a stream of visitor IDs and add each o
     *   The result is an approximation, not an exact count.
     *   It cannot retrieve the actual items that were added, only the estimated count of unique items.
     *   It does not support the deletion of items.
+
+### Mathematical Foundations
+
+HyperLogLog (HLL) estimates cardinality by observing the patterns of leading zeros in the hash values of the elements. The core idea is that the maximum number of leading zeros observed across all hash values provides an estimate of the logarithm of the number of unique elements.
+
+The algorithm divides the hash space into `m` (a power of 2) registers. Each element is hashed, and its hash value is split into two parts: a prefix that determines which register to update, and a suffix whose leading zeros are counted. The maximum count of leading zeros for each register is stored. The final estimate is derived from the harmonic mean of these maximum leading zero counts, with a bias correction factor (`alpha`).
+
+The standard error of the estimate is approximately `1.04 / sqrt(m)`. This means that increasing `m` (and thus memory usage) improves accuracy.
+
+### Implementation Considerations
+
+*   **Hash Function**: A high-quality, uniformly distributing hash function (e.g., MurmurHash, FNV-1a) is essential to ensure that hash values are random and the leading zero counts are representative.
+*   **Register Size**: Each register typically stores a small integer (e.g., 5-6 bits) representing the maximum number of leading zeros. This contributes to HLL's extreme memory efficiency.
+*   **Bias Correction**: The raw estimate from the harmonic mean often has a bias, especially for small cardinalities. HLL implementations include empirical bias correction mechanisms to improve accuracy.
+*   **Small Range Correction**: For very small cardinalities, the HLL estimate can be inaccurate. Implementations often switch to a linear counting approach (counting zero registers) for better accuracy in this range.
+*   **Large Range Correction**: For extremely large cardinalities, a correction factor is applied to account for hash collisions.
+*   **Merging**: HLL structures can be easily merged by taking the maximum value for each corresponding register. This makes HLL suitable for distributed and parallel counting.
+*   **No Deletions**: HLL does not support the deletion of elements.
+
+## Code Example
+
+A basic Go implementation of the HyperLogLog can be found [here](code/hyperloglog.go).

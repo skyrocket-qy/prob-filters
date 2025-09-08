@@ -21,3 +21,22 @@ Consider a content delivery network (CDN) that caches recently accessed articles
 *   **Cons**:
     *   Insertions can fail if the filter is too full, requiring the filter to be rebuilt with more space.
     *   Implementation is slightly more complex than a standard Bloom filter.
+
+### Mathematical Foundations
+
+Cuckoo filters are based on Cuckoo Hashing, where each item has a few possible locations (buckets) in the hash table. When an item is inserted, it tries to occupy one of its designated locations. If all locations are occupied, it "kicks out" an existing item, which then tries to find a new home in one of its alternative locations. This process can cascade, leading to a chain of displacements. If a cycle is detected or a maximum number of displacements is reached, the insertion fails, and the filter might need to be resized.
+
+The false positive rate of a Cuckoo filter is primarily determined by the size of the fingerprints and the number of entries per bucket. Larger fingerprints and more entries per bucket generally lead to lower false positive rates.
+
+### Implementation Considerations
+
+*   **Cuckoo Hashing**: The core challenge is implementing the cuckoo hashing mechanism, including handling displacements and potential insertion failures. This often involves a loop that attempts to re-insert kicked-out items.
+*   **Fingerprints**: Instead of storing the full item, Cuckoo filters store a small fingerprint of the item. The size of this fingerprint directly impacts the false positive rate and memory usage.
+*   **Bucket Size**: The number of entries per bucket (e.g., 2, 4, 8) affects both the load factor (how full the filter can get before insertions become difficult) and the false positive rate. Larger bucket sizes generally allow for higher load factors.
+*   **Hash Functions**: Two hash functions are typically used: one to determine the primary bucket and another to determine the alternate bucket based on the fingerprint. These hash functions need to be carefully chosen to ensure good distribution.
+*   **Resizing**: If an insertion fails, the Cuckoo filter needs to be resized and all existing items re-inserted. This can be a costly operation and should be managed to avoid frequent occurrences.
+*   **Deletion**: Cuckoo filters support deletion by simply removing the fingerprint from its location. This is a significant advantage over standard Bloom filters.
+
+## Code Example
+
+A basic Go implementation of the Cuckoo Filter can be found [here](code/cuckoo_filter.go).

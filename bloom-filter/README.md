@@ -25,3 +25,23 @@ This approach significantly reduces the load on the database, as most invalid us
     *   False positives are possible. The rate can be tuned by adjusting the size of the filter and the number of hash functions.
     *   Cannot delete elements from a standard Bloom filter (though variations like Counting Bloom Filters exist).
     *   The size of the filter must be decided in advance based on the expected number of items.
+
+### Mathematical Foundations
+
+The core of a Bloom filter's efficiency lies in its probabilistic nature. The false positive rate (FPR), denoted as `p`, is a critical parameter. The optimal number of bits `m` and hash functions `k` for a given number of expected elements `n` and desired false positive rate `p` can be calculated as follows:
+
+*   **Optimal number of bits (m)**: `m = -(n * ln(p)) / (ln(2)^2)`
+*   **Optimal number of hash functions (k)**: `k = (m / n) * ln(2)`
+
+These formulas ensure that for a given `n` and `p`, the filter uses the minimum possible space while maintaining the desired error rate. The probability of a false positive increases with the number of elements added and decreases with the size of the bit array and the number of hash functions.
+
+### Implementation Considerations
+
+*   **Hash Functions**: The quality of hash functions is crucial. They should be independent and uniformly distribute elements across the bit array. Using multiple independent hash functions can be achieved by combining two universal hash functions (e.g., `h(x) = (h1(x) + i * h2(x)) mod m` for `i` from 0 to `k-1`).
+*   **Bit Array Management**: Efficiently managing the bit array (e.g., using a `[]byte` slice and bitwise operations in Go) is important for memory efficiency and performance.
+*   **Capacity Planning**: The size of the Bloom filter (`m`) and the number of hash functions (`k`) must be determined upfront based on the expected number of elements (`n`) and the acceptable false positive rate (`p`). If the number of elements significantly exceeds `n`, the false positive rate will increase rapidly.
+*   **No Deletions**: Standard Bloom filters do not support element deletion. If deletions are required, a Counting Bloom Filter or Cuckoo Filter should be considered.
+
+## Code Example
+
+A basic Go implementation of the Bloom Filter can be found [here](code/bloom_filter.go).

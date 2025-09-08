@@ -19,3 +19,22 @@ A Skip List provides a good alternative. It can maintain the sorted index and al
 *   **Cons**:
     *   Uses more memory than a standard sorted array or linked list.
     *   Performance is probabilistic, not guaranteed (though the probability of poor performance is very low).
+
+### Mathematical Foundations
+
+A Skip List is a probabilistic data structure that uses multiple levels of linked lists to achieve `O(log n)` average-case time complexity for search, insertion, and deletion operations, similar to balanced binary search trees. The "probabilistic" aspect comes from how the levels of each node are determined: each node is randomly assigned a level, with a certain probability `P` (typically 0.5) of being promoted to the next higher level. This random assignment ensures that, on average, the skip list remains balanced.
+
+The height of a skip list with `n` elements is `O(log n)` with high probability. The number of levels a node participates in is determined by a coin flip process, leading to a logarithmic number of levels on average.
+
+### Implementation Considerations
+
+*   **Random Level Generation**: The `randomLevel` function is crucial. It determines how many levels a new node will span. The probability `P` (e.g., 0.5) dictates the likelihood of a node being included in higher levels.
+*   **Header Node**: A special header node is typically used, which has forward pointers for all possible levels. This simplifies insertion and search operations.
+*   **Update Array**: An `update` array (or similar mechanism) is used during insertion and deletion to keep track of the nodes that need to be updated at each level.
+*   **Memory Usage**: Skip lists generally use more memory than a simple sorted linked list due to the multiple forward pointers per node. However, this overhead is offset by the improved performance.
+*   **Concurrency**: Skip lists are often favored in concurrent environments because they can be made lock-free or fine-grained locked more easily than balanced trees, as operations on different parts of the list can proceed independently.
+*   **Probabilistic Guarantees**: While the average-case performance is `O(log n)`, the worst-case performance can be `O(n)`. However, the probability of hitting the worst case is extremely low, making them practical for most applications.
+
+## Code Example
+
+A basic Go implementation of the Skip List can be found [here](code/skip_list.go).

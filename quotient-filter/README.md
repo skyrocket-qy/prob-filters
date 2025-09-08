@@ -19,3 +19,25 @@ When a node receives a Quotient filter from another node, it can merge it with i
 *   **Cons**:
     *   More complex to implement than Bloom filters.
     *   Performance can degrade as the filter approaches its capacity.
+
+### Mathematical Foundations
+
+A Quotient Filter is based on a technique called "quotienting," where a hash value is split into a "quotient" and a "remainder" (fingerprint). The quotient determines the canonical bucket where an item *should* reside, and the remainder is stored as the fingerprint. Unlike Cuckoo filters, which use multiple hash functions to find alternative locations, Quotient filters use a single hash function and resolve collisions by shifting elements within a contiguous block of memory called a "run."
+
+The false positive rate is determined by the size of the fingerprint.
+
+### Implementation Considerations
+
+*   **Bit Packing**: Quotient filters are highly optimized for space by packing fingerprints and metadata bits (is_occupied, is_continuation, is_shifted) into a compact bit array. This requires careful bit manipulation.
+*   **Run Management**: The core complexity lies in managing "runs" of elements. When an item is inserted, it might need to shift existing items to maintain the sorted order of fingerprints within its run. Similarly, lookups involve navigating these runs.
+*   **Metadata Bits**: Three metadata bits per slot are typically used:
+    *   `is_occupied`: Indicates if the slot is occupied by an item.
+    *   `is_continuation`: Indicates if the item in this slot is a continuation of a run that started earlier.
+    *   `is_shifted`: Indicates if the item in this slot has been shifted from its canonical position.
+*   **Hashing**: A single hash function is used to derive both the quotient and the remainder. The quality of this hash function is critical.
+*   **Resizing and Merging**: Quotient filters have the advantage of being mergeable and resizable without requiring access to the original items, which is beneficial for distributed systems. However, these operations still require careful implementation.
+*   **Deletion**: Deletion in Quotient filters is possible but complex, as it requires correctly updating the metadata bits and potentially shifting elements to maintain the integrity of runs.
+
+## Code Example
+
+A basic Go implementation of the Quotient Filter can be found [here](code/quotient_filter.go).
