@@ -1,6 +1,7 @@
 package minhashlsh
 
 import (
+	"encoding/binary"
 	"hash/fnv"
 	"math"
 	"sort"
@@ -28,7 +29,9 @@ func NewMinHash(numPermutations int) *MinHash {
 func hashValue(data []byte, seed uint64) uint64 {
 	h := fnv.New64a()
 	h.Write(data)
-	h.Write([]byte{byte(seed)}) // Incorporate seed
+	seedBytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(seedBytes, seed)
+	h.Write(seedBytes) // Incorporate seed
 	return h.Sum64()
 }
 

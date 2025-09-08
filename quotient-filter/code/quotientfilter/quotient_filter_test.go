@@ -1,15 +1,17 @@
-package bloomfilter
+package quotientfilter
 
 import (
 	"testing"
 )
 
-func TestBloomFilter_AddContains(t *testing.T) {
-	filter := New(100, 0.01) // Capacity for 100 items, 1% false positive rate
+func TestQuotientFilter_AddContains(t *testing.T) {
+	filter := New(100) // Capacity for 100 items
 
 	itemsToAdd := []string{"apple", "banana", "cherry"}
 	for _, item := range itemsToAdd {
-		filter.Add([]byte(item))
+		if !filter.Add([]byte(item)) {
+			t.Fatalf("Failed to add %s to the filter", item)
+		}
 	}
 
 	// Check for items that should be present
