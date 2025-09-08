@@ -1,17 +1,16 @@
 package bloomfilter
 
 import (
-	"hash"
 	"hash/fnv"
 	"math"
 )
 
 // BloomFilter represents a probabilistic data structure for set membership testing.
 type BloomFilter struct {
-	bits       []bool
-	hashFuncs  []hash.Hash64
-	numHashes  int
-	capacity   int
+	bits         []bool
+	numHashes    int
+	size         uint64
+	capacity     int
 	falsePosRate float64
 }
 
@@ -20,8 +19,11 @@ func New(capacity int, falsePosRate float64) *BloomFilter {
 	// Optimal number of bits (m) and hash functions (k)
 	// m = -(n * ln(p)) / (ln(2)^2)
 	// k = (m / n) * ln(2)
-	m := int(-float64(capacity) * (math.Log(falsePosRate) / (math.Log(2) * math.Log(2))))
-	k := int(float64(m) / float64(capacity) * math.Log(2))
+	mFloat := -float64(capacity) * math.Log(falsePosRate) / (math.Ln2 * math.Ln2)
+	kFloat := mFloat / float64(capacity) * math.Ln2
+
+	m := int(math.Ceil(mFloat))
+	k := int(math.Ceil(kFloat))
 
 	if m < 1 {
 		m = 1
@@ -30,77 +32,46 @@ func New(capacity int, falsePosRate float64) *BloomFilter {
 		k = 1
 	}
 
-	hashFuncs := make([]hash.Hash64, k)
-	for i := 0; i < k; i++ {
-		hashFuncs[i] = fnv.New64a() // Using FNV-1a for simplicity
-	}
-
 	return &BloomFilter{
-		bits:       make([]bool, m),
-		hashFuncs:  hashFuncs,
-		numHashes:  k,
-		capacity:   capacity,
+		bits:         make([]bool, m),
+		numHashes:    k,
+		size:         uint64(m),
+		capacity:     capacity,
 		falsePosRate: falsePosRate,
 	}
 }
 
-// Add inserts an element into the Bloom filter.
+// baseHashes computes the two base hashes for double hashing.
+func (bf *BloomFilter) baseHashes(data []byte) (uint64, uint64) {
+	h1 := fnv.New64a()
+	h1.Write(data)
+	hash1 := h1.Sum64()
+
+	h2 := fnv.New64()
+	h2.Write(data)
+	hash2 := h2.Sum64()
+
+	return hash1, hash2
+}
+
+// Add inserts an element into the Bloom filter using double hashing.
 func (bf *BloomFilter) Add(data []byte) {
-	for _, hf := range bf.hashFuncs {
-		hf.Reset()
-		hf.Write(data)
-		index := hf.Sum64() % uint64(len(bf.bits))
+	h1, h2 := bf.baseHashes(data)
+	for i := 0; i < bf.numHashes; i++ {
+		index := (h1 + uint64(i)*h2) % bf.size
 		bf.bits[index] = true
 	}
 }
 
-// Contains checks if an element might be in the Bloom filter.
+// Contains checks if an element might be in the Bloom filter using double hashing.
 // Returns true if the element might be present, false if definitely not.
 func (bf *BloomFilter) Contains(data []byte) bool {
-	for _, hf := range bf.hashFuncs {
-		hf.Reset()
-		hf.Write(data)
-		index := hf.Sum64() % uint64(len(bf.bits))
+	h1, h2 := bf.baseHashes(data)
+	for i := 0; i < bf.numHashes; i++ {
+		index := (h1 + uint64(i)*h2) % bf.size
 		if !bf.bits[index] {
 			return false // Definitely not in the set
 		}
 	}
 	return true // Might be in the set (possible false positive)
 }
-
-// Example usage (main function for demonstration)
-/*
-import (
-	"fmt"
-	"math"
-)
-
-func main() {
-	filter := New(1000, 0.01) // Capacity for 1000 items, 1% false positive rate
-
-	itemsToAdd := []string{"apple", "banana", "cherry", "date", "elderberry"}
-	for _, item := range itemsToAdd {
-		filter.Add([]byte(item))
-		fmt.Printf("Added: %s\n", item)
-	}
-
-	fmt.Println("\nChecking items:")
-	checkItems := []string{"apple", "grape", "cherry", "kiwi", "date"}
-	for _, item := range checkItems {
-		if filter.Contains([]byte(item)) {
-			fmt.Printf("'%s' might be in the set.\n", item)
-		} else {
-			fmt.Printf("'%s' is definitely NOT in the set.\n", item)
-		}
-	}
-
-	// Demonstrate a false positive (if it occurs)
-	fmt.Println("\nDemonstrating potential false positive:")
-	falsePositiveCandidate := "zucchini" // A word not added
-	if filter.Contains([]byte(falsePositiveCandidate)) {
-		fmt.Printf("'%s' might be in the set (false positive).\n", falsePositiveCandidate)
-	} else {
-		fmt.Printf("'%s' is definitely NOT in the set.\n", falsePositiveCandidate)
-	}
-}
-*/
