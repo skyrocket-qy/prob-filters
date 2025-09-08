@@ -54,3 +54,14 @@ The height of a skip list with `n` elements is `O(log n)` with high probability.
 ## Code Example
 
 A basic Go implementation of the Skip List can be found [here](code/skip_list.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd skip-list/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go skip_list.go
+    ```

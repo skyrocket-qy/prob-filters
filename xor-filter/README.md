@@ -56,3 +56,14 @@ The space efficiency of XOR filters is remarkable, typically requiring only abou
 ## Code Example
 
 A basic Go implementation of the XOR Filter can be found [here](code/xor_filter.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd xor-filter/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go xor_filter.go
+    ```

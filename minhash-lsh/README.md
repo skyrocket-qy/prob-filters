@@ -59,3 +59,14 @@ MinHash can be used to generate a small signature for each document. These signa
 ## Code Example
 
 A basic Go implementation of MinHash and LSH can be found [here](code/minhash_lsh.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd minhash-lsh/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go minhash_lsh.go
+    ```

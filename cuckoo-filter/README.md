@@ -57,3 +57,14 @@ The false positive rate of a Cuckoo filter is primarily determined by the size o
 ## Code Example
 
 A basic Go implementation of the Cuckoo Filter can be found [here](code/cuckoo_filter.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd cuckoo-filter/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go cuckoo_filter.go
+    ```

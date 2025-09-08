@@ -55,3 +55,14 @@ The `compression` parameter controls the number of centroids and thus the accura
 ## Code Example
 
 A basic Go implementation of the t-digest can be found [here](code/t_digest.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd t-digest/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go t_digest.go
+    ```

@@ -51,3 +51,14 @@ The accuracy of the Top-K list depends on the accuracy of the underlying frequen
 ## Code Example
 
 A basic Go implementation of the Top-K algorithm can be found [here](code/top_k.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd top-k/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go top_k.go
+    ```

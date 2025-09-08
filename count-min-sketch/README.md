@@ -59,3 +59,14 @@ The parameters `d` and `w` are chosen based on the desired error bounds:
 ## Code Example
 
 A basic Go implementation of the Count-Min Sketch can be found [here](code/count_min_sketch.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd count-min-sketch/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go count_min_sketch.go
+    ```

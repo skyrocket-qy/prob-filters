@@ -61,3 +61,14 @@ These formulas ensure that for a given `n` and `p`, the filter uses the minimum 
 ## Code Example
 
 A basic Go implementation of the Bloom Filter can be found [here](code/bloom_filter.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd bloom-filter/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go bloom_filter.go
+    ```

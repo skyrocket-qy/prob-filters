@@ -58,3 +58,14 @@ The false positive rate is determined by the size of the fingerprint.
 ## Code Example
 
 A basic Go implementation of the Quotient Filter can be found [here](code/quotient_filter.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd quotient-filter/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go quotient_filter.go
+    ```

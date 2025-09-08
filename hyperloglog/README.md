@@ -59,3 +59,14 @@ The standard error of the estimate is approximately `1.04 / sqrt(m)`. This means
 ## Code Example
 
 A basic Go implementation of the HyperLogLog can be found [here](code/hyperloglog.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd hyperloglog/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go hyperloglog.go
+    ```

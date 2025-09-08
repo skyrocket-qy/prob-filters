@@ -55,3 +55,14 @@ The false positive rate calculation is similar to a standard Bloom filter, but t
 ## Code Example
 
 A basic Go implementation of the Counting Bloom Filter can be found [here](code/counting_bloom_filter.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd counting-bloom-filter/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go counting_bloom_filter.go
+    ```

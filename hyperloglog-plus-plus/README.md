@@ -61,3 +61,14 @@ These improvements lead to a more accurate estimate across a wider range of card
 ## Code Example
 
 A basic Go implementation of HyperLogLog++ can be found [here](code/hyperloglog_plus_plus.go).
+
+### How to Run the Example
+
+1.  Navigate to the `code` directory:
+    ```bash
+    cd hyperloglog-plus-plus/code
+    ```
+2.  Run the `main.go` file:
+    ```bash
+    go run main.go hyperloglog_plus_plus.go
+    ```
