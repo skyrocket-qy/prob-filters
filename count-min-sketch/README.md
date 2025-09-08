@@ -40,6 +40,22 @@ The parameters `d` and `w` are chosen based on the desired error bounds:
 *   **No Deletions**: Standard Count-Min Sketches do not support deletions. Variations like the "Count-Min Sketch with Conservative Updates" or "Count-Min Sketch with Deletions" exist but are more complex.
 *   **Heavy Hitters**: Count-Min Sketches are often used as a component in algorithms for finding "heavy hitters" (most frequent items) in a stream.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(d * w)` counters, where `d` is the depth and `w` is the width. This is very space-efficient, as it's independent of the number of unique items in the stream.
+*   **Time Complexity**:
+    *   **Add**: `O(d)` operations, involving `d` hash computations and `d` counter increments.
+    *   **Estimate**: `O(d)` operations, involving `d` hash computations and `d` counter lookups.
+*   **Practical Performance**: Both additions and estimations are extremely fast, making it suitable for high-throughput data streams.
+
+### Trade-offs
+
+*   **Overestimation**: The primary trade-off is that the Count-Min Sketch always overestimates the true frequency of an item. It never underestimates. The amount of overestimation is bounded by `epsilon`.
+*   **Approximation**: It provides an approximate count, not an exact one. The accuracy is tunable by adjusting `epsilon` and `delta`.
+*   **No Deletions**: Standard Count-Min Sketches do not support deletions.
+*   **Parameter Tuning**: Choosing appropriate `epsilon` and `delta` values is crucial and depends on the application's requirements for accuracy and confidence. A smaller error requires more memory.
+*   **Heavy Hitters**: While it can estimate frequencies, finding the exact "heavy hitters" (most frequent items) often requires additional data structures or algorithms built on top of the Count-Min Sketch.
+
 ## Code Example
 
 A basic Go implementation of the Count-Min Sketch can be found [here](code/count_min_sketch.go).

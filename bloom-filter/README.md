@@ -42,6 +42,22 @@ These formulas ensure that for a given `n` and `p`, the filter uses the minimum 
 *   **Capacity Planning**: The size of the Bloom filter (`m`) and the number of hash functions (`k`) must be determined upfront based on the expected number of elements (`n`) and the acceptable false positive rate (`p`). If the number of elements significantly exceeds `n`, the false positive rate will increase rapidly.
 *   **No Deletions**: Standard Bloom filters do not support element deletion. If deletions are required, a Counting Bloom Filter or Cuckoo Filter should be considered.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(m)` bits, where `m` is the size of the bit array. This is highly space-efficient, often requiring only a few bits per element.
+*   **Time Complexity**:
+    *   **Add**: `O(k)` operations, where `k` is the number of hash functions. Each operation involves hashing and setting a bit.
+    *   **Contains**: `O(k)` operations. Each operation involves hashing and checking a bit.
+    *   **Delete**: Not supported in standard Bloom filters.
+*   **Practical Performance**: Bloom filters are extremely fast for both insertions and lookups due to their constant-time hash operations and direct bit array access. The speed is largely independent of the number of elements stored, depending only on `k`.
+
+### Trade-offs
+
+*   **Space vs. False Positive Rate**: There's a direct trade-off between the memory allocated (`m`) and the acceptable false positive rate (`p`). To reduce `p` for a given number of elements `n`, `m` must increase.
+*   **Speed vs. False Positive Rate**: Increasing the number of hash functions `k` can reduce the false positive rate (up to an optimal `k`), but it also increases the time taken for Add and Contains operations.
+*   **Static Capacity**: The filter's size is fixed at creation. If the number of elements `n` significantly exceeds the planned capacity, the false positive rate will degrade rapidly. Resizing requires rebuilding the entire filter.
+*   **No Deletions**: This is a fundamental limitation. If elements need to be removed, a Counting Bloom Filter or Cuckoo Filter is a better choice, but they come with their own trade-offs (e.g., increased memory, more complex implementation).
+
 ## Code Example
 
 A basic Go implementation of the Bloom Filter can be found [here](code/bloom_filter.go).

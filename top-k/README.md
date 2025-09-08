@@ -33,6 +33,21 @@ The accuracy of the Top-K list depends on the accuracy of the underlying frequen
 *   **Memory Management**: The memory usage is primarily determined by the size of the underlying frequency estimator and the `k` items stored in the heap.
 *   **Dynamic Updates**: Top-K algorithms are well-suited for streaming data, as they can be updated incrementally as new items arrive.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(d * w + k)`, where `d * w` is the size of the underlying frequency estimator (e.g., Count-Min Sketch) and `k` is the number of top items to track. This is very space-efficient for large streams.
+*   **Time Complexity**:
+    *   **Add**: `O(d + log k)` on average, where `O(d)` is for updating the frequency estimator and `O(log k)` is for heap operations.
+    *   **GetTopK**: `O(k log k)` for sorting the heap elements, or `O(k)` if just retrieving without sorting.
+*   **Practical Performance**: Efficient for real-time tracking of top items in high-throughput data streams.
+
+### Trade-offs
+
+*   **Approximation**: The primary trade-off is that the Top-K list is an approximation. It might not always identify the true top K items, especially if their frequencies are very close or if the underlying frequency estimator has significant error.
+*   **Accuracy vs. Resources**: The accuracy depends on the parameters of the underlying frequency estimator (e.g., `epsilon` and `delta` for Count-Min Sketch) and the value of `k`. Higher accuracy or larger `k` generally requires more memory and computation.
+*   **Dynamic Updates**: Supports dynamic updates, making it suitable for streaming data.
+*   **No Exact Counts**: While it tracks estimated frequencies, it doesn't store exact counts for all items in the stream, only for the top K (or those in the heap).
+
 ## Code Example
 
 A basic Go implementation of the Top-K algorithm can be found [here](code/top_k.go).

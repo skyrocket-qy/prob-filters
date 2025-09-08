@@ -37,6 +37,23 @@ The false positive rate of a Cuckoo filter is primarily determined by the size o
 *   **Resizing**: If an insertion fails, the Cuckoo filter needs to be resized and all existing items re-inserted. This can be a costly operation and should be managed to avoid frequent occurrences.
 *   **Deletion**: Cuckoo filters support deletion by simply removing the fingerprint from its location. This is a significant advantage over standard Bloom filters.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(N * f)` bits, where `N` is the capacity (number of items) and `f` is the fingerprint size. Often more space-efficient than Bloom filters for low false positive rates.
+*   **Time Complexity**:
+    *   **Add**: Amortized `O(1)` on average, but can be `O(max_displacements)` in the worst case if many items are kicked out.
+    *   **Contains**: `O(1)` on average, as it only checks a few fixed locations.
+    *   **Delete**: `O(1)` on average.
+*   **Practical Performance**: Lookups are very fast and deterministic. Insertions are fast on average but can be slow in rare cases if many displacements occur.
+
+### Trade-offs
+
+*   **Insertion Failure**: Unlike Bloom filters, Cuckoo filters can become "full" and fail to insert new items, requiring a costly rebuild/resize operation. This is a significant drawback for applications that cannot tolerate insertion failures.
+*   **Complexity**: More complex to implement than Bloom filters due to the cuckoo hashing mechanism and displacement handling.
+*   **Space vs. Load Factor**: There's a trade-off between space efficiency and the maximum load factor (how full the filter can get). Higher load factors (e.g., >95%) can lead to more frequent insertion failures.
+*   **Deletion Support**: A major advantage over standard Bloom filters, as it supports exact deletions.
+*   **False Positive Rate**: Can achieve lower false positive rates than Bloom filters for the same memory footprint in certain scenarios.
+
 ## Code Example
 
 A basic Go implementation of the Cuckoo Filter can be found [here](code/cuckoo_filter.go).

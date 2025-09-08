@@ -36,6 +36,26 @@ MinHash can be used to generate a small signature for each document. These signa
 *   **Shingling**: For text documents, items are typically converted into "shingles" (k-grams) before MinHashing. The choice of `k` for shingles affects the definition of "similarity."
 *   **Scalability**: MinHash and LSH are designed for scalability, allowing similarity estimation and approximate nearest neighbor search on very large datasets where pairwise comparisons are infeasible.
 
+### Performance Analysis
+
+*   **Space Complexity**:
+    *   **MinHash**: `O(num_permutations)` per signature.
+    *   **LSH**: `O(N * bands)` where `N` is the number of items, for storing signatures in buckets.
+*   **Time Complexity**:
+    *   **MinHash Signature Generation**: `O(num_items_in_set * num_permutations)`.
+    *   **Jaccard Similarity Estimation**: `O(num_permutations)`.
+    *   **LSH Bucketing**: `O(num_permutations)` per signature.
+    *   **Approximate Nearest Neighbor Search**: Highly efficient, as it avoids `O(N^2)` pairwise comparisons.
+*   **Practical Performance**: MinHash and LSH are highly scalable for large datasets, enabling similarity search that would otherwise be computationally prohibitive.
+
+### Trade-offs
+
+*   **Approximation**: Both MinHash and LSH provide approximate results. The accuracy of similarity estimation and the recall/precision of LSH depend on the chosen parameters (`num_permutations`, `bands`, `rows`).
+*   **Parameter Tuning**: Selecting optimal `num_permutations`, `bands`, and `rows` is crucial and often requires experimentation based on the desired accuracy and computational budget.
+*   **Hash Function Quality**: The quality of the hash functions directly impacts the accuracy of MinHash signatures.
+*   **No Exact Similarity**: MinHash provides an estimate of Jaccard similarity, not the exact value.
+*   **Scalability vs. Accuracy**: There's a trade-off between the scalability achieved by LSH and the accuracy of the nearest neighbor search. More aggressive bucketing (fewer bands, more rows) can lead to higher recall but also more false positives.
+
 ## Code Example
 
 A basic Go implementation of MinHash and LSH can be found [here](code/minhash_lsh.go).

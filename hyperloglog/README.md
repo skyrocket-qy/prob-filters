@@ -39,6 +39,23 @@ The standard error of the estimate is approximately `1.04 / sqrt(m)`. This means
 *   **Merging**: HLL structures can be easily merged by taking the maximum value for each corresponding register. This makes HLL suitable for distributed and parallel counting.
 *   **No Deletions**: HLL does not support the deletion of elements.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(m)` registers, where `m` is the number of registers. Each register typically uses a few bits (e.g., 5-6 bits). This is extremely space-efficient, allowing estimation of billions of unique items with kilobytes of memory.
+*   **Time Complexity**:
+    *   **Add**: `O(1)` (constant time) on average, involving a single hash computation and a register update.
+    *   **Estimate**: `O(m)` to iterate through all registers and compute the harmonic mean.
+    *   **Merge**: `O(m)` to iterate through and take the maximum of corresponding registers.
+*   **Practical Performance**: Very fast for additions. Estimation and merging are also efficient, scaling linearly with the number of registers, not the number of items.
+
+### Trade-offs
+
+*   **Approximation**: The primary trade-off is that HLL provides an approximation, not an exact count. The accuracy is tunable by adjusting the number of registers (`m`).
+*   **No Item Retrieval**: HLL only estimates cardinality; it does not store the actual items, so you cannot retrieve them or check for individual membership.
+*   **No Deletions**: HLL does not support the deletion of elements.
+*   **Fixed Memory**: Memory usage is fixed once `m` is chosen, regardless of the number of items added.
+*   **Bias for Small Cardinalities**: Standard HLL can have a noticeable bias for very small cardinalities, which is often addressed by using a small range correction or by switching to a hybrid approach (like HyperLogLog++).
+
 ## Code Example
 
 A basic Go implementation of the HyperLogLog can be found [here](code/hyperloglog.go).

@@ -35,6 +35,22 @@ The height of a skip list with `n` elements is `O(log n)` with high probability.
 *   **Concurrency**: Skip lists are often favored in concurrent environments because they can be made lock-free or fine-grained locked more easily than balanced trees, as operations on different parts of the list can proceed independently.
 *   **Probabilistic Guarantees**: While the average-case performance is `O(log n)`, the worst-case performance can be `O(n)`. However, the probability of hitting the worst case is extremely low, making them practical for most applications.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(N)` on average, where `N` is the number of elements. Each node has `1/(1-P)` pointers on average, leading to `O(N)` total space.
+*   **Time Complexity**:
+    *   **Search**: `O(log N)` on average.
+    *   **Insert**: `O(log N)` on average.
+    *   **Delete**: `O(log N)` on average.
+*   **Practical Performance**: Skip lists offer performance comparable to balanced trees but are generally simpler to implement. Their probabilistic nature means performance is not strictly guaranteed in the worst case, but the probability of hitting a bad case is extremely low.
+
+### Trade-offs
+
+*   **Memory Overhead**: Uses more memory than a simple sorted linked list or array due to the multiple pointers per node.
+*   **Probabilistic Guarantees**: Performance is probabilistic, not deterministic. While the average case is `O(log N)`, the worst case is `O(N)`. However, the probability of the worst case is exponentially small.
+*   **Simplicity vs. Determinism**: Simpler to implement than balanced trees (e.g., Red-Black trees, AVL trees) while offering similar average-case performance. This simplicity can be a significant advantage in practice.
+*   **Concurrency**: Well-suited for concurrent applications, as operations on different parts of the list can often proceed without contention, making them easier to parallelize than some other data structures.
+
 ## Code Example
 
 A basic Go implementation of the Skip List can be found [here](code/skip_list.go).

@@ -37,6 +37,22 @@ The space efficiency of XOR filters is remarkable, typically requiring only abou
 *   **Hash Functions**: Three independent hash functions are crucial for the construction and lookup processes.
 *   **Memory Efficiency**: Despite the complex construction, XOR filters offer superior memory efficiency and faster lookups compared to other probabilistic filters once built.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(N)` bits, typically around 1.23 bits per item, making them extremely space-efficient.
+*   **Time Complexity**:
+    *   **Construction**: `O(N)` on average, but can be complex and computationally intensive, especially for very large `N`.
+    *   **Contains**: `O(1)` (constant time) with very few memory accesses, making them extremely fast.
+    *   **Add/Delete**: Not supported after construction.
+*   **Practical Performance**: Once constructed, XOR filters offer unparalleled lookup speed and memory efficiency for static sets.
+
+### Trade-offs
+
+*   **Static Nature**: The most significant limitation is that XOR filters are static. They cannot be updated (additions or deletions) after construction. Any change to the dataset requires rebuilding the entire filter, which can be costly.
+*   **Construction Complexity**: The construction algorithm is more complex than for Bloom or Cuckoo filters, involving graph algorithms and solving systems of equations.
+*   **No False Positives (for items in the set)**: A major advantage is that for items that were part of the original set, there are no false positives. This makes them "perfect" for membership testing of the original set.
+*   **Space and Speed**: They offer the best combination of space efficiency and lookup speed among probabilistic membership filters for static sets.
+
 ## Code Example
 
 A basic Go implementation of the XOR Filter can be found [here](code/xor_filter.go).

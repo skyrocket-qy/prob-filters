@@ -36,6 +36,22 @@ The false positive rate calculation is similar to a standard Bloom filter, but t
 *   **Hash Functions**: Similar to standard Bloom filters, the quality and independence of hash functions are crucial for distributing elements evenly and minimizing collisions.
 *   **Memory Overhead**: Counting Bloom filters require more memory than standard Bloom filters because each bit is replaced by a counter. For example, an 8-bit counter uses 8 times more memory than a single bit.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(m * c)` bits, where `m` is the number of counters and `c` is the number of bits per counter. This is higher than a standard Bloom filter.
+*   **Time Complexity**:
+    *   **Add**: `O(k)` operations, involving hashing and incrementing counters.
+    *   **Contains**: `O(k)` operations, involving hashing and checking counters.
+    *   **Remove**: `O(k)` operations, involving hashing and decrementing counters.
+*   **Practical Performance**: Operations are still very fast, similar to a standard Bloom filter, as they involve constant-time hash and counter manipulations.
+
+### Trade-offs
+
+*   **Memory vs. Deletion Support**: The primary trade-off is increased memory usage compared to standard Bloom filters in exchange for the ability to delete elements.
+*   **Counter Overflow**: The fixed size of counters means that if an element is added too many times, its counter can overflow. This can lead to incorrect deletions or a higher effective false positive rate if not managed.
+*   **"Soft" Deletions**: Deleting an element only decrements its counters. If a counter was incremented due to a false positive, decrementing it might inadvertently affect the presence check of other elements that share that counter. This means deletions are not "perfect" and can introduce new types of errors.
+*   **Complexity**: Slightly more complex to implement than a standard Bloom filter due to counter management.
+
 ## Code Example
 
 A basic Go implementation of the Counting Bloom Filter can be found [here](code/counting_bloom_filter.go).

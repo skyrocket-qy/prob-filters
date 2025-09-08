@@ -35,6 +35,23 @@ The `compression` parameter controls the number of centroids and thus the accura
 *   **Mergeability**: A significant advantage of t-digests is their mergeability. Two t-digests can be combined into a single t-digest, making them suitable for distributed and parallel processing of data streams.
 *   **No Deletions**: Standard t-digests do not support the deletion of individual data points.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(compression)` or `O(number_of_centroids)`. The memory usage is proportional to the compression factor, not the number of data points, making it very space-efficient for large datasets.
+*   **Time Complexity**:
+    *   **Add**: `O(log(number_of_centroids))` on average, as it involves finding the closest centroid and potentially merging.
+    *   **Quantile Estimation**: `O(number_of_centroids)` to iterate through centroids, or `O(log(number_of_centroids))` if centroids are kept sorted and a binary search is used.
+    *   **Merge**: `O(number_of_centroids)` to merge two t-digests.
+*   **Practical Performance**: Efficient for both additions and quantile queries, making it suitable for real-time monitoring and streaming data.
+
+### Trade-offs
+
+*   **Approximation**: The primary trade-off is that t-digest provides an approximation of quantiles, not exact values. The accuracy is tunable by adjusting the `compression` parameter.
+*   **Accuracy at Tails**: While generally more accurate at the tails than some other methods (like KLL sketches), its accuracy is still an approximation.
+*   **No Deletions**: Standard t-digests do not support the deletion of individual data points.
+*   **Complexity**: More complex to implement than simpler probabilistic data structures due to the centroid management and merging logic.
+*   **Mergeability**: A significant advantage for distributed systems, allowing for efficient aggregation of quantile information from multiple sources.
+
 ## Code Example
 
 A basic Go implementation of the t-digest can be found [here](code/t_digest.go).

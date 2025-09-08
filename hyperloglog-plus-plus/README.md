@@ -40,6 +40,24 @@ These improvements lead to a more accurate estimate across a wider range of card
 *   **Merging**: HLL++ structures are also mergeable, similar to standard HLL, by taking the maximum of corresponding register values (or merging sparse representations).
 *   **No Deletions**: Like standard HLL, HLL++ does not support the deletion of elements.
 
+### Performance Analysis
+
+*   **Space Complexity**: `O(m)` registers (dense representation) or `O(k)` for sparse representation (where `k` is the number of unique items up to a threshold). Still extremely space-efficient, often using kilobytes for billions of items.
+*   **Time Complexity**:
+    *   **Add**: `O(1)` on average. May involve a conversion from sparse to dense representation, which can be `O(m)`.
+    *   **Estimate**: `O(m)` for dense representation, `O(k)` for sparse representation.
+    *   **Merge**: `O(m)` for dense representation, `O(k)` for sparse representation.
+*   **Practical Performance**: Similar to standard HLL, very fast for additions. Estimation and merging are efficient. The sparse representation adds a slight overhead but improves accuracy for small cardinalities.
+
+### Trade-offs
+
+*   **Improved Accuracy for Small Cardinalities**: The main advantage over standard HLL. This comes at the cost of slightly increased implementation complexity due to the sparse representation and transition logic.
+*   **Approximation**: Still provides an approximation, not an exact count.
+*   **No Item Retrieval**: Does not store items, only estimates cardinality.
+*   **No Deletions**: Does not support deletion of elements.
+*   **Complexity**: More complex to implement than standard HLL due to the hybrid sparse/dense representation and advanced bias correction.
+*   **Memory Efficiency**: Maintains the excellent memory efficiency of HLL, often with better accuracy for the same memory footprint in certain ranges.
+
 ## Code Example
 
 A basic Go implementation of HyperLogLog++ can be found [here](code/hyperloglog_plus_plus.go).
