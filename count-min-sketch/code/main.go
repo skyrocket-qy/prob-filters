@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/count-min-sketch/code"
+
+	"github.com/skyrocket-qy/prob-filters/count-min-sketch/code/countminsketch"
 )
 
 func main() {

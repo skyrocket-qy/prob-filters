@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/counting-bloom-filter/code"
+	"github.com/skyrocket-qy/prob-filters/counting-bloom-filter/code/countingbloomfilter"
 )
 
 func main() {

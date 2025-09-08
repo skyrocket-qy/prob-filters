@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
-	"github.com/skyro/prob-filters/t-digest/code"
+	"github.com/skyrocket-qy/prob-filters/t-digest/code/tdigest"
 )
 
 func main() {

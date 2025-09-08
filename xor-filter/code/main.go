@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/xor-filter/code"
+	"github.com/skyrocket-qy/prob-filters/xor-filter/code/xorfilter"
 )
 
 func main() {

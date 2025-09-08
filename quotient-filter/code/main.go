@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/quotient-filter/code"
+	"github.com/skyrocket-qy/prob-filters/quotient-filter/code/quotientfilter"
 )
 
 func main() {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/hyperloglog/code"
+	"github.com/skyrocket-qy/prob-filters/hyperloglog/code/hyperloglog"
 )
 
 func main() {

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/top-k/code"
+	"github.com/skyrocket-qy/prob-filters/top-k/code/topk"
 )
 
 func main() {

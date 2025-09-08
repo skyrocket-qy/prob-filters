@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/skip-list/code"
+	"github.com/skyrocket-qy/prob-filters/skip-list/code/skiplist"
 )
 
 func main() {

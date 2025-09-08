@@ -1,16 +1,15 @@
 package hyperloglogplusplus
 
 import (
+	"fmt"
 	"hash/fnv"
 	"math"
-	"sort"
-	"fmt"
 )
 
 // HyperLogLogPlusPlus represents an enhanced probabilistic data structure for cardinality estimation.
 type HyperLogLogPlusPlus struct {
-	m        uint32   // Number of registers (must be a power of 2)
-	p        uint8    // log2(m)
+	m         uint32  // Number of registers (must be a power of 2)
+	p         uint8   // log2(m)
 	registers []uint8 // Stores the maximum number of leading zeros
 	// For simplicity, we omit the sparse representation and bias correction
 	// that are key features of HLL++. This is a conceptual example.
@@ -26,8 +25,8 @@ func New(precision uint8) *HyperLogLogPlusPlus {
 	}
 	m := uint32(1 << precision)
 	return &HyperLogLogPlusPlus{
-		m:        m,
-		p:        precision,
+		m:         m,
+		p:         precision,
 		registers: make([]uint8, m),
 	}
 }
@@ -42,7 +41,7 @@ func (hllpp *HyperLogLogPlusPlus) Add(data []byte) {
 	j := x >> (64 - hllpp.p)
 
 	// Get the number of leading zeros after the p bits
-	w := x << hllpp.p // Shift left to remove the first p bits
+	w := x << hllpp.p               // Shift left to remove the first p bits
 	rho := countLeadingZeros(w) + 1 // rho(w) + 1
 
 	// Update the register if the new value is greater
@@ -58,7 +57,7 @@ func countLeadingZeros(x uint64) uint8 {
 	}
 	var count uint8
 	for i := 0; i < 64; i++ {
-		if (x >> (63 - i)) & 1 == 0 {
+		if (x>>(63-i))&1 == 0 {
 			count++
 		} else {
 			break
@@ -88,10 +87,10 @@ func (hllpp *HyperLogLogPlusPlus) Estimate() float64 {
 			}
 		}
 		if V != 0 {
-			estimate = float64(hllpp.m) * math.Log(float4(hllpp.m)/float64(V))
+			estimate = float64(hllpp.m) * math.Log(float64(hllpp.m)/float64(V))
 		}
 	} else if estimate > 1.0/30.0*math.Pow(2.0, 64.0) { // Large range correction (for 64-bit hash)
-		estimate = -math.Pow(2.0, 64.0) * math.Log(1.0 - estimate/math.Pow(2.0, 64.0))
+		estimate = -math.Pow(2.0, 64.0) * math.Log(1.0-estimate/math.Pow(2.0, 64.0))
 	}
 
 	return estimate

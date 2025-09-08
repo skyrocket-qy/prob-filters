@@ -81,7 +81,9 @@ func (cf *CuckooFilter) getAltIndex(idx int, fp byte) int {
 // Add inserts an item into the filter. Returns true on success, false if filter is full.
 func (cf *CuckooFilter) Add(data []byte) bool {
 	fp := cf.generateFingerprint(data)
-	idx1 := int(fnv.New32a().Sum32(data) % uint32(cf.numBuckets))
+	h := fnv.New32a()
+h.Write(data)
+	idx1 := int(h.Sum32() % uint32(cf.numBuckets))
 	idx2 := cf.getAltIndex(idx1, fp)
 
 	// Try to insert into either bucket
@@ -130,7 +132,9 @@ func (cf *CuckooFilter) insertToBucket(idx int, fp byte) bool {
 // Contains checks if an item might be in the filter.
 func (cf *CuckooFilter) Contains(data []byte) bool {
 	fp := cf.generateFingerprint(data)
-	idx1 := int(fnv.New32a().Sum32(data) % uint32(cf.numBuckets))
+	h := fnv.New32a()
+h.Write(data)
+	idx1 := int(h.Sum32() % uint32(cf.numBuckets))
 	idx2 := cf.getAltIndex(idx1, fp)
 
 	return cf.lookupInBucket(idx1, fp) || cf.lookupInBucket(idx2, fp)
@@ -149,7 +153,9 @@ func (cf *CuckooFilter) lookupInBucket(idx int, fp byte) bool {
 // Delete removes an item from the filter. Returns true on success, false if not found.
 func (cf *CuckooFilter) Delete(data []byte) bool {
 	fp := cf.generateFingerprint(data)
-	idx1 := int(fnv.New32a().Sum32(data) % uint32(cf.numBuckets))
+	h := fnv.New32a()
+h.Write(data)
+	idx1 := int(h.Sum32() % uint32(cf.numBuckets))
 	idx2 := cf.getAltIndex(idx1, fp)
 
 	if cf.deleteFromBucket(idx1, fp) || cf.deleteFromBucket(idx2, fp) {

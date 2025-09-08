@@ -4,6 +4,7 @@ import (
 	"hash/fnv"
 	"math"
 	"sort"
+	"strconv"
 )
 
 // MinHash represents a MinHash signature for a set.
@@ -102,7 +103,7 @@ func (lsh *LSH) GetLSHBuckets(mh *MinHash) [][]byte {
 			idx := b*lsh.rows + r
 			// Hash the signature part for this row to get a bucket ID
 			h := fnv.New64a()
-			h.Write([]byte(string(mh.signature[idx])))
+			h.Write([]byte(strconv.FormatUint(mh.signature[idx], 10)))
 			bandSignature = append(bandSignature, byte(h.Sum64() & 0xFF)) // Take lower 8 bits
 		}
 		// Sort the band signature to make it canonical for hashing into a bucket

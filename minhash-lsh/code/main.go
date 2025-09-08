@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/skyro/prob-filters/minhash-lsh/code"
+	"github.com/skyrocket-qy/prob-filters/minhash-lsh/code/minhashlsh"
 )
 
 func main() {
